@@ -24,4 +24,12 @@ $ curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
 $ conda activate mini-rag-app
 ``` 
 
+### install required packages 
 
+``` bash
+$ pip install -r requirements.txt 
+``` 
+### setup environment variables
+``` bash 
+$ cp .env.example .env  
+- set your environment variables in you '.env' like 'OPEN_API_KEY' to your actual key in openai
