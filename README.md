@@ -30,11 +30,14 @@ $ conda activate mini-rag-app
 $ pip install -r requirements.txt 
 ``` 
 ### setup environment variables
-``` bash 
-$ cp .env.example .env  
-- set your environment variables in you '.env' like 'OPEN_API_KEY' to your actual key in openai
+$ cp .env.example .env
 
-4) run fastapi 
-``` bash 
-$ uvicorn main:app --reload 
-```
+- Set your environment variables in your `.env` like `OPEN_API_KEY` to your actual key in OpenAI.
+
+### Starting the application
+
+1) run fastapi
+```bash
+$ uvicorn main:app --reload
+``` 
+
