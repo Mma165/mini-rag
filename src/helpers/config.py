@@ -1,12 +1,13 @@
-from pydantic_settings import BaseSettings, SettingConfigDict
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
-class settings(BaseSettings):
-    APP_NAME:str 
-    APP_VERSION:str
-    OPEN_API_KEY:str 
 
-    class config:
-        env_file = ".env"
+class Settings(BaseSettings):
+    APP_NAME: str
+    APP_VERSION: str
+    OPEN_API_KEY: str
+
+    model_config = SettingsConfigDict(env_file=".env")
+
 
 def get_settings():
-    return settings()
+    return Settings()
