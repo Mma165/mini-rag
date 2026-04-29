@@ -38,6 +38,6 @@ $ cp .env.example .env
 
 1) run fastapi
 ```bash
-$ uvicorn main:app --reload
+$ uvicorn src.main:app --reload
 ``` 
 
