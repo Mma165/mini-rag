@@ -30,14 +30,15 @@ async def upload_data(project_id:str,file: UploadFile,
 
 # Also I need to valicate that the file name is unique for each project to avoid overwriting files.
     project_dir_path=ProjectController().get_project_path(project_id=project_id)
-    file_path=DataController().generate_unique_file_name(orginal_file_name=file.filename,project_id=project_id)
+    file_path,file_id=DataController().generate_unique_file_path(orginal_file_name=file.filename,project_id=project_id)
     try:
       async with aiofiles.open(file_path, 'wb') as f: # Open the file asynchronously for writing binary data
-          while chunks  := await file.read(settings.File_Chunk_Size):  # Read the file content asynchronously
+          while chunks  := await file.read(settings.File_Default_Chunk_Size):  # Read the file content asynchronously
             await f.write(chunks)  # Write the content to the new file asynchronously
     except Exception as e:
          logger.error(f"Error saving file: {e}") 
          return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST,
                               content={"result_signal": ResponseSignals.File_Save_Error.value})
-    return JSONResponse( content={"result_signal": ResponseSignals.File_Upload_Success.value})
+    return JSONResponse( content={"result_signal": ResponseSignals.File_Upload_Success.value,
+                                  "file_id": file_id})
     

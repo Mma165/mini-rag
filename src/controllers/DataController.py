@@ -18,7 +18,7 @@ class DataController(BaseController):
         return True, ResponseSignals.File_Upload_Success.value
     
     
-    def generate_unique_file_name(self,orginal_file_name:str,project_id:str):
+    def generate_unique_file_path(self,orginal_file_name:str,project_id:str):
         # I will generate a unique file name by adding a random string to the original file name.
         random_key=self.generate_random_string()
         project_path=ProjectController().get_project_path(project_id=project_id)# I will get the project path to save the file in the correct location.
@@ -27,7 +27,7 @@ class DataController(BaseController):
         while os.path.exists(new_file_path):
             random_key=self.generate_random_string()
             new_file_path=os.path.join(project_path,f"{random_key}_{cleaned_file_name}")
-        return new_file_path
+        return new_file_path, random_key+"_"+cleaned_file_name
 
     def clean_file_name(self,orginal_file_name:str):
         # I will clean the file name by removing any special characters and spaces to avoid any issues with file systems.
