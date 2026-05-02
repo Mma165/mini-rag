@@ -33,11 +33,11 @@ async def upload_data(project_id:str,file: UploadFile,
     file_path=DataController().generate_unique_file_name(orginal_file_name=file.filename,project_id=project_id)
     try:
       async with aiofiles.open(file_path, 'wb') as f: # Open the file asynchronously for writing binary data
-          content = await file.read()  # Read the file content asynchronously
-          await f.write(content)  # Write the content to the new file asynchronously
+          while chunks  := await file.read(settings.File_Chunk_Size):  # Read the file content asynchronously
+            await f.write(chunks)  # Write the content to the new file asynchronously
     except Exception as e:
          logger.error(f"Error saving file: {e}") 
          return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST,
                               content={"result_signal": ResponseSignals.File_Save_Error.value})
-    return JSONResponse(status_code=status.HTTP_200_OK, content={"result_signal": ResponseSignals.File_Upload_Success.value})
+    return JSONResponse( content={"result_signal": ResponseSignals.File_Upload_Success.value})
     

@@ -16,6 +16,8 @@ class DataController(BaseController):
         if file.size >self.settings.File_Max_Size:
             return False, ResponseSignals.File_Size_Exceeded.value
         return True, ResponseSignals.File_Upload_Success.value
+    
+    
     def generate_unique_file_name(self,orginal_file_name:str,project_id:str):
         # I will generate a unique file name by adding a random string to the original file name.
         random_key=self.generate_random_string()
