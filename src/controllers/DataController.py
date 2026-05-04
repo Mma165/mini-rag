@@ -4,13 +4,29 @@ from fastapi import UploadFile
 from models import ResponseSignals
 import os 
 import re
+import logging
+
+logger = logging.getLogger("uvicorn.error")
 
 class DataController(BaseController):
     def __init__(self):
         super().__init__()
 
     async def validate_uploaded_file(self,file: UploadFile):
-        if file.content_type not in self.settings.File_Allowed_Types: 
+        # If content_type is None, try to infer it from filename
+        content_type = file.content_type
+        if content_type is None:
+            # Infer from file extension
+            file_ext = os.path.splitext(file.filename)[-1].lower()
+            if file_ext == '.pdf':
+                content_type = 'application/pdf'
+            elif file_ext in ['.txt', '.text']:
+                content_type = 'text/plain'
+        
+        logger.info(f"File content_type: {content_type}, filename: {file.filename}")
+        logger.info(f"Allowed types: {self.settings.File_Allowed_Types}")
+        
+        if content_type not in self.settings.File_Allowed_Types: 
             return False, ResponseSignals.File_Type_Not_Supported.value
         
         if file.size >self.settings.File_Max_Size:

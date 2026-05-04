@@ -1,5 +1,8 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
+import os
 
+# Get the absolute path to the .env file relative to this config.py file
+ENV_FILE_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), ".env")
 
 class Settings(BaseSettings):
     APP_NAME: str
@@ -8,7 +11,10 @@ class Settings(BaseSettings):
     File_Allowed_Types: list[str]
     File_Max_Size: int
     File_Default_Chunk_Size: int 
-    model_config = SettingsConfigDict(env_file=".env")
+    
+    model_config = SettingsConfigDict(
+        env_file=ENV_FILE_PATH
+    )
 
 
 def get_settings():
