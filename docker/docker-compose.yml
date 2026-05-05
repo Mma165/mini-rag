@@ -1,0 +1,14 @@
+services:
+  mongodb: 
+    image: mongo:8.0.21
+    container_name: mongodb 
+    ports: # 
+      - "22017:22017" # I will change the default MongoDB port to 22017 to avoid conflicts with any existing MongoDB instances that may be running on the host machine. This will allow us to run our MongoDB instance in a container without interfering with any other MongoDB instances that may be running on the same machine.
+    volumes:
+      - "./mongodb:/data/db"
+    networks: # 
+      - backend
+networks:
+  backend:
+    driver: bridge 
+# I will use the bridge network driver for our backend network because it is a simple and efficient way to allow communication between containers in the same network. The bridge driver creates a private internal network on the host machine, allowing containers to communicate with each other using their container names as hostnames. This will enable our application to easily connect to the MongoDB container using its container name, simplifying the configuration and communication between our application and the database.
