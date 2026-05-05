@@ -2,7 +2,7 @@ services:
   mongodb: 
     image: mongo:8.0.21
     container_name: mongodb 
-    ports: # 
+    ports: 
       - "22017:22017" # I will change the default MongoDB port to 22017 to avoid conflicts with any existing MongoDB instances that may be running on the host machine. This will allow us to run our MongoDB instance in a container without interfering with any other MongoDB instances that may be running on the same machine.
     volumes:
       - "./mongodb:/data/db"
