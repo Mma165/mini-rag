@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 from helpers import get_settings, Settings
 from controllers import DataController, ProjectController, ProcessController
 from models import ResponseSignals
-from routes.schemes.data import ProcessRequest
+from routes import ProcessRequest
 import os 
 import aiofiles
 import logging 
