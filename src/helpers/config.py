@@ -8,9 +8,13 @@ class Settings(BaseSettings):
     APP_NAME: str
     APP_VERSION: str
     OPEN_API_KEY: str
+
     File_Allowed_Types: list[str]
     File_Max_Size: int
     File_Default_Chunk_Size: int 
+
+    MongoDB_URI: str
+    MongoDB_Database: str
     
     model_config = SettingsConfigDict(
         env_file=ENV_FILE_PATH
