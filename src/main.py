@@ -1,8 +1,7 @@
 from fastapi import FastAPI
 from routes import base_router, data_router
 from helpers import get_settings
-from motor.motor_ayncio import AsyncIOMotorClient 
-
+from motor.motor_asyncio import AsyncIOMotorClient 
 app = FastAPI() 
 @app.on_event("startup")
 async def startup_db_client():
