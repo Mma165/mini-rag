@@ -9,8 +9,9 @@ class ChunkModel(BaseDataModel):
         self.collection = self.db_client[DataBaseEnums.COLLECTION_CHUNK_NAME.value]
     
     async def create_chunk(self,chunk:DataChunk):
-        result=await self.collection.insert_one(dict(chunk))
-        return chunk
+        result=await self.collection.insert_one(chunk.dict())
+        return result
+    
     async def get_chunk(self,chunk_id:str):
         result =await self.collection.find_one({
             "_id":result.inserted_id 
@@ -19,6 +20,15 @@ class ChunkModel(BaseDataModel):
             return None 
         return DataChunk(**result)
     
+    async def insert_many_chunks(self, chunks:list, batch_size:int=100):
+        for i in range(0,len(chunks),batch_size):
+            batch=chunks[i:i+batch_size]
+            operations=[
+                InsertOne(chunk.dict())
+                for chunk in batch
+            ]
+            await self.collection.bulk_write(operations)
+            return len(chunks)
 
 
     
