@@ -1,8 +1,8 @@
-from fastapi import FastAPI,APIRouter,Depends ,UploadFile,File,status
+from fastapi import FastAPI,APIRouter,Depends ,UploadFile,File,status,Request
 from fastapi.responses import JSONResponse
 from helpers import get_settings, Settings
 from controllers import DataController, ProjectController, ProcessController
-from models import ResponseSignals
+from models import ResponseSignals,ProjectModel
 from .schemes import ProcessRequest
 import os 
 import aiofiles
@@ -14,9 +14,14 @@ data_router=APIRouter(
 )
 @data_router.post("/upload/{project_id}")
 
-async def upload_data(project_id:str, file: UploadFile = File(...),
+async def upload_data(request:Request,project_id:str, file: UploadFile = File(...),
                       settings:Settings=Depends(get_settings)
                       ):
+    project_model=ProjectModel(
+        db_client=request.app.mongodb_client
+    )
+    project=await project_model.get_project_or_create_one(project_id=project_id)
+
 # I need to validate the data to make sure it is in the correct format and 
 # the correct size before saving it to the database 
 
@@ -40,8 +45,10 @@ async def upload_data(project_id:str, file: UploadFile = File(...),
          logger.error(f"Error saving file: {e}") 
          return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST,
                               content={"result_signal": ResponseSignals.File_Save_Error.value})
-    return JSONResponse( content={"result_signal": ResponseSignals.File_Upload_Success.value,
-                                  "file_id": file_id})
+    return JSONResponse( content=
+                        {"result_signal": ResponseSignals.File_Upload_Success.value,
+                        "file_id": file_id,
+                        "project_id":str(project._id)})
 
 
 @data_router.post("/process/{project_id}")
