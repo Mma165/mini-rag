@@ -11,3 +11,4 @@ class ResponseSignals(Enum):
     File_Upload_Success = "File uploaded successfully."
     File_Uploaded_Failed = "File upload failed."
     File_Save_Error = "Error saving file."
+    File_Processed_Succefully="Fil processed succefully"

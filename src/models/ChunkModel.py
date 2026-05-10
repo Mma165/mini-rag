@@ -1,7 +1,7 @@
 from .BaseDataModel import BaseDataModel
 from .enums import DataBaseEnums
 from .db_schemes import Project,DataChunk
-#from bson.objectid import ObjectID 
+from bson.objectid import ObjectId
 from pymongo import InsertOne
 class ChunkModel(BaseDataModel):
     def __init__(self,db_client:object):
@@ -9,7 +9,7 @@ class ChunkModel(BaseDataModel):
         self.collection = self.db_client[DataBaseEnums.COLLECTION_CHUNK_NAME.value]
     
     async def create_chunk(self,chunk:DataChunk):
-        result=await self.collection.insert_one(chunk.dict())
+        result=await self.collection.insert_one(chunk.dict(by_alias=True,exclude_unset=True))
         return result
     
     async def get_chunk(self,chunk_id:str):
@@ -24,11 +24,21 @@ class ChunkModel(BaseDataModel):
         for i in range(0,len(chunks),batch_size):
             batch=chunks[i:i+batch_size]
             operations=[
-                InsertOne(chunk.dict())
+                InsertOne(chunk.dict(by_alias=True,exclude_unset=True))
                 for chunk in batch
             ]
             await self.collection.bulk_write(operations)
-            return len(chunks)
+        return len(chunks)
+    
+    async def delete_chunks_by_project_id(self, chunk_project_id:ObjectId):
+        result= await self.collection.delete_many(
+            {
+                "chunk_project_id":chunk_project_id
+            }
+        )
+        return result.deleted_count
+
+
 
 
     
